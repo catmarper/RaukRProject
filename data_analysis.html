@@ -625,6 +625,74 @@ div.tocify {
 <a class="sourceLine" id="cb14-6" data-line-number="6"><span class="kw">library</span>(ggpubr)</a></code></pre></div>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="co">#arranging the two grids side by side with one legend</span></a>
 <a class="sourceLine" id="cb15-2" data-line-number="2"><span class="kw">ggarrange</span>(g,z, <span class="dt">ncol=</span><span class="dv">2</span>, <span class="dt">nrow=</span><span class="dv">1</span>, <span class="dt">common.legend =</span> <span class="ot">TRUE</span>, <span class="dt">legend=</span><span class="st">&quot;bottom&quot;</span>)</a></code></pre></div>
+=======
+
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="co">#arranging the two grids side by side with one legend</span></a>
+<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="kw">library</span>(gridExtra)</a></code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;gridExtra&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     combine</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw">library</span>(grid)</a>
+<a class="sourceLine" id="cb16-2" data-line-number="2"><span class="kw">library</span>(ggplot2)</a>
+<a class="sourceLine" id="cb16-3" data-line-number="3"><span class="kw">library</span>(lattice)</a>
+<a class="sourceLine" id="cb16-4" data-line-number="4"><span class="kw">library</span>(ggpubr)</a></code></pre></div>
+<pre><code>## Loading required package: magrittr</code></pre>
+<pre><code>## 
+## Attaching package: &#39;magrittr&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:ggmap&#39;:
+## 
+##     inset</code></pre>
+<pre><code>## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     set_names</code></pre>
+<pre><code>## The following object is masked from &#39;package:tidyr&#39;:
+## 
+##     extract</code></pre>
+<pre><code>## 
+## Attaching package: &#39;ggpubr&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:cowplot&#39;:
+## 
+##     get_legend</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="co">#arranging the two grids side by side with one legend</span></a>
+<a class="sourceLine" id="cb24-2" data-line-number="2"><span class="kw">ggarrange</span>(g,z, <span class="dt">ncol=</span><span class="dv">2</span>, <span class="dt">nrow=</span><span class="dv">1</span>, <span class="dt">common.legend =</span> <span class="ot">TRUE</span>, <span class="dt">legend=</span><span class="st">&quot;bottom&quot;</span>)</a></code></pre></div>
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Compute genomic kinship-based distances</span>
+<span class="co">#gkin &lt;- ibs(data_raw, weight = &#39;freq&#39;)</span>
+<span class="co">#head(gkin)</span>
+<span class="kw">load</span>(<span class="st">&quot;gkin.rdat&quot;</span>)
+dm &lt;-<span class="st"> </span><span class="kw">as.dist</span>(.<span class="dv">5</span> <span class="op">-</span><span class="st"> </span>gkin) <span class="co"># Normalize it</span>
+<span class="co"># PCA</span>
+pca &lt;-<span class="st"> </span><span class="kw">prcomp</span>(dm) <span class="co">#Principal components analysis</span>
+<span class="kw">library</span>(devtools)
+<span class="co">#install_github(&quot;vqv/ggbiplot&quot;) #to get the ggbiplot</span>
+<span class="kw">library</span>(ggbiplot)
+<span class="co">#vector for the colors</span>
+color_<span class="dv">9</span> &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;dodgerblue4&quot;</span>, <span class="st">&quot;bisque4&quot;</span>, <span class="st">&quot;darkgreen&quot;</span>,<span class="st">&quot;yellow3&quot;</span>, <span class="st">&quot;darkgoldenrod3&quot;</span>, <span class="st">&quot;darkorchid4&quot;</span>, <span class="st">&quot;darkred&quot;</span>, <span class="st">&quot;grey&quot;</span>)
+g &lt;-<span class="st"> </span><span class="kw">ggbiplot</span>(pca, <span class="dt">obs.scale =</span> <span class="dv">1</span>, <span class="dt">var.scale =</span> <span class="dv">1</span>,
+              <span class="dt">groups =</span> data_raw<span class="op">@</span>phdata<span class="op">$</span>Breed, <span class="dt">ellipse =</span> F, <span class="co">#using breed as a group</span>
+              <span class="dt">circle =</span> <span class="ot">TRUE</span>, <span class="dt">var.axes =</span> F) <span class="op">+</span>
+<span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;PCA&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> color_<span class="dv">9</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&#39;none&#39;</span>) <span class="co">#removing legend</span>
+<span class="co"># MDS</span>
+ibs &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">cmdscale</span>(dm))
+ibs &lt;-<span class="st"> </span><span class="kw">cbind</span>(ibs, <span class="dt">pop =</span> data_raw<span class="op">@</span>phdata<span class="op">$</span>Breed) <span class="co">#same as group at PCA</span>
+z &lt;-<span class="kw">ggplot</span>(ibs, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x=</span>V1, <span class="dt">y=</span>V2, <span class="dt">col=</span>pop)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;MDS&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> color_<span class="dv">9</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&#39;none&#39;</span>) <span class="co">#removing legend</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#arranging the two grids side by side with one legend</span>
+<span class="kw">library</span>(gridExtra)
+<span class="kw">library</span>(grid)
+<span class="kw">library</span>(ggplot2)
+<span class="kw">library</span>(lattice)
+<span class="kw">library</span>(ggpubr)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#arranging the two grids side by side with one legend</span>
+<span class="kw">ggarrange</span>(g,z, <span class="dt">ncol=</span><span class="dv">2</span>, <span class="dt">nrow=</span><span class="dv">1</span>, <span class="dt">common.legend =</span> <span class="ot">TRUE</span>, <span class="dt">legend=</span><span class="st">&quot;bottom&quot;</span>)</code></pre></div>
+
 <p><img src="data_analysis_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 </div>
 <div id="autoencoder" class="section level1">
